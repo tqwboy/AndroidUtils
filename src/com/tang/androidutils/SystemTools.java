@@ -3,6 +3,7 @@ package com.tang.androidutils;
 import java.io.File;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.ComponentName;
@@ -170,5 +171,58 @@ public class SystemTools {
 		InputMethodManager imm = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
+	
+	/**
+	 * 打开相机拍照，并返回照片数据（在Activity中的onActivityResult获取到数据）
+	 * 
+	 * @param activity App的Activity
+	 * @param requestCode 请求编号
+	 */
+	public static void openCamera(Activity activity, int requestCode) {
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		activity.startActivityForResult(intent, requestCode);
+	}
+	
+	/**
+	 * 打开系统切割图片程序，切割方式为按照宽高切割
+	 * 
+	 * @param activity App的Activity
+	 * @param uri 图片文件保存路径Uri
+	 * @param requestCode 请求编号
+	 * @param outputX 宽度
+	 * @param outputY 高度
+	 */
+	public static void startPhotoZoomByWh(Activity activity, Uri uri, int requestCode,
+			int outputX, int outputY) {
+
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("outputX", outputX);
+		intent.putExtra("outputY", outputY);
+		intent.putExtra("return-data", true);
+		activity.startActivityForResult(intent, requestCode);
+	}
+
+	/**
+	 * 打开系统切割图片程序，切割方式为按照设定比例切割
+	 * 
+	 * @param activity App的Activity
+	 * @param uri 图片文件保存路径Uri
+	 * @param requestCode 请求编号
+	 * @param aspectX 宽度比例
+	 * @param aspectY 高度比例
+	 */
+	public static void startPhotoZoomByAspect(Activity activity, Uri uri,
+			int requestCode, int aspectX, int aspectY) {
+
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(uri, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("aspectX", aspectX);
+		intent.putExtra("aspectY", aspectY);
+		intent.putExtra("return-data", true);
+		activity.startActivityForResult(intent, requestCode);
 	}
 }
